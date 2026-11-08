@@ -25,6 +25,10 @@ namespace {
 	// Editor layer (20, 61) and z information (24, 25).
 	constexpr std::string_view KEYS_LAYER[] = { "20", "61", "24", "25" };
 
+	// "Hide" from the editor's object options. GD only ever writes it when the
+	// object is hidden, and hidden objects are invisible during normal play.
+	constexpr std::string_view KEY_HIDDEN = "135";
+
 	// Color channels (21, 22) and the legacy color property (19), plus the HSV
 	// companions (41 - 44).
 	constexpr std::string_view KEYS_COLOR[] = { "19", "21", "22", "41", "42", "43", "44" };
@@ -158,6 +162,19 @@ namespace {
 
 		if (settings.inheritLayer) {
 			copyKeys(target, replacement, KEYS_LAYER, std::size(KEYS_LAYER), true);
+		}
+
+		if (settings.inheritHidden) {
+			// Follow the target's "Hide" flag in both directions: replacements of
+			// a hidden object stay hidden (and therefore invisible in game) until
+			// the player unhides them manually, and replacements of a visible
+			// object are visible even if the captured selection was hidden.
+			if (props::flag(target, KEY_HIDDEN)) {
+				props::set(replacement, KEY_HIDDEN, "1");
+			}
+			else {
+				props::erase(replacement, KEY_HIDDEN);
+			}
 		}
 
 		out += props::serialize(replacement);

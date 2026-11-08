@@ -26,6 +26,7 @@ namespace {
 		settings.inheritGroups = mod->getSettingValue<bool>("inherit-groups");
 		settings.inheritColor = mod->getSettingValue<bool>("inherit-color");
 		settings.inheritLayer = mod->getSettingValue<bool>("inherit-layer");
+		settings.inheritHidden = mod->getSettingValue<bool>("inherit-hidden");
 		settings.transform = mod->getSettingValue<bool>("transform-with-target");
 		return settings;
 	}
