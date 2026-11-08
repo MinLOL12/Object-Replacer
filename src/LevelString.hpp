@@ -32,6 +32,9 @@ struct RewriteSettings {
 	bool inheritGroups = true;
 	bool inheritColor = true;
 	bool inheritLayer = true;
+	// Hidden objects are replaced like any other object; this keeps the
+	// replacement hidden as well instead of making it appear.
+	bool inheritHidden = true;
 	bool transform = true;
 };
 

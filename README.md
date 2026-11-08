@@ -16,8 +16,9 @@ object ID can be replaced.
 * The replacement can be **one object or a whole selection** of objects; the
   selection keeps its shape, spacing and internal layering.
 * The replacement **follows the original object**: position, rotation, scale,
-  flips, groups, color channels and layers are carried over, so levels keep
-  their look and their triggers keep working.
+  flips, groups, color channels, layers and the editor's *Hide* flag are carried
+  over, so levels keep their look and their triggers keep working — and a hidden
+  object is replaced by hidden objects instead of ones that suddenly appear.
 * Works on downloaded levels, your own levels and editor playtests, because the
   level is rewritten *before* the game creates it — the level file itself is
   never changed (unless you explicitly bake it in the editor).
@@ -54,6 +55,7 @@ object's ID shown in the editor) tells you the ID.
 | Keep Target Groups | on | Puts replacements into the replaced object's groups, so group triggers and color triggers still hit them. |
 | Keep Target Colors | on | Uses the replaced object's color channels on the replacement. |
 | Keep Target Layer | on | Uses the replaced object's editor layer / z layer / z order. |
+| Keep Target Hidden State | on | Hidden objects are replaced like any other object, and the replacements stay hidden too (invisible in game) until you unhide them. |
 | Follow Target Rotation & Scale | on | Rotates, scales and flips the replacement to match the object it replaces. |
 | Open Object Replacer | F5 | Keybind that opens the menu. |
 
@@ -70,6 +72,13 @@ mod while verifying — respect the level rules of wherever you plan to use it).
   including objects you added yourself with that ID.
 * Triggers are not recommended as targets; the mod is meant for gameplay
   objects and decoration.
+* Objects marked **Hide** in the editor are replaced like everything else. With
+  *Keep Target Hidden State* on (the default) the replacements are hidden as
+  well, so they stay invisible in game until you select them in the editor and
+  turn **Hide** off — they never pop into view on their own.
+* Hidden targets still count as targets even if you never see them while
+  playing, which is how decorative "custom spike" setups keep their hitboxes
+  out of sight.
 * A replacement is applied when a level is loaded. If you change a rule while a
   level is already open, restart / re-enter the level to see the change.
 * Very large replacements multiplied over very many objects will, of course,

@@ -230,6 +230,43 @@ void testGroupsAndColors() {
 	checkEqual(valueOf(plain, "20"), "", "layers not inherited when disabled");
 }
 
+void testHiddenObjects() {
+	Rule rule;
+	rule.targetID = 8;
+	rule.objects.push_back({ "1,211,2,0,3,0", 0.0, 0.0 });
+
+	std::vector<Rule> rules{ rule };
+	RewriteSettings settings;
+
+	// A hidden spike (key 135) is still replaced, and the replacement inherits
+	// the hidden flag so it does not suddenly appear in game.
+	auto hidden = rewriteLevelString("1,8,2,150,3,75,135,1", rules, settings);
+	checkEqual(valueOf(hidden, "1"), "211", "hidden object is replaced");
+	checkEqual(valueOf(hidden, "135"), "1", "replacement of a hidden object stays hidden");
+	checkNear(numberOf(hidden, "2"), 150, "hidden replacement keeps the x position");
+
+	// Hidden flag on a different value (e.g. 135,0) counts as visible.
+	auto visibleFlag = rewriteLevelString("1,8,2,150,3,75,135,0", rules, settings);
+	checkEqual(valueOf(visibleFlag, "135"), "", "zero hide flag is not inherited");
+
+	// A visible target produces a visible replacement, even when the captured
+	// selection itself was hidden.
+	Rule hiddenCapture;
+	hiddenCapture.targetID = 8;
+	hiddenCapture.objects.push_back({ "1,211,2,0,3,0,135,1", 0.0, 0.0 });
+
+	std::vector<Rule> hiddenRules{ hiddenCapture };
+	auto visible = rewriteLevelString("1,8,2,150,3,75", hiddenRules, settings);
+	checkEqual(valueOf(visible, "135"), "", "visible target clears the hide flag");
+
+	// Setting turned off keeps whatever the captured object had.
+	RewriteSettings noInherit;
+	noInherit.inheritHidden = false;
+
+	auto untouched = rewriteLevelString("1,8,2,150,3,75", hiddenRules, noInherit);
+	checkEqual(valueOf(untouched, "135"), "1", "hide flag untouched when inheritance is off");
+}
+
 void testSettingsHeaderIsPreserved() {
 	Rule rule;
 	rule.targetID = 8;
@@ -313,6 +350,7 @@ int main() {
 	testScaleKeys();
 	testFlipFollowsTarget();
 	testGroupsAndColors();
+	testHiddenObjects();
 	testSettingsHeaderIsPreserved();
 	testDisabledRuleAndEmpty();
 	testSelfReplacementDoesNotLoop();

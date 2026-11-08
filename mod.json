@@ -46,6 +46,12 @@
 			"description": "Use the editor layer / z layer / z order of the replaced object on the replacements.",
 			"default": true
 		},
+		"inherit-hidden": {
+			"type": "bool",
+			"name": "Keep Target Hidden State",
+			"description": "Hidden objects are replaced too. Turn this on so the replacements are hidden as well instead of suddenly showing up - unhide them in the editor to reveal them.",
+			"default": true
+		},
 		"transform-with-target": {
 			"type": "bool",
 			"name": "Follow Target Rotation & Scale",
